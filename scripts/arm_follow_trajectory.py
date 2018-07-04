@@ -213,16 +213,18 @@ class ArmFollowTrajectory(object):
         # sent two NULL bytes at the beginning of the communication to
         # indicate the beginning of the data array. Arduino uses these
         # two NULL bytes as a flag
-        self.spi.write([0x00])
-        self.spi.write([0x00])
-        # we break each number into two bytes and send them separately
-        # because in SPI, data is sent byte by byte
-        for i in range(len(self.jointPWMs)):
-            pwm = int(self.jointPWMs[i])  # take each number in the array
-            msb = (pwm >> 8) & 0xff # grab the most significant byte
-            lsb = pwm & 0xff # grab the least significant byte
-            self.spi.write([msb]) # write MSB
-            self.spi.write([lsb]) # write LSB
+        for i in range(3):
+            print "SPI sending"
+            self.spi.write([0x00])
+            self.spi.write([0x00])
+            # we break each number into two bytes and send them separately
+            # because in SPI, data is sent byte by byte
+            for i in range(len(self.jointPWMs)):
+                pwm = int(self.jointPWMs[i])  # take each number in the array
+                msb = (pwm >> 8) & 0xff # grab the most significant byte
+                lsb = pwm & 0xff # grab the least significant byte
+                self.spi.write([msb]) # write MSB
+                self.spi.write([lsb]) # write LSB
         
         
 if __name__ == '__main__':
